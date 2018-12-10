@@ -1,0 +1,58 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+
+script/source = "extends Node
+
+onready var entity; 
+onready var states = [];
+
+
+func init(entity_ref):
+	entity = entity_ref
+	var states_holder = entity.get_node(\"States\");
+	if (states_holder != null):
+		states = states_holder.get_children();
+		for state in states:
+			state.init(entity_ref);
+	else:
+		printerr(\"init(): There must be a holder for the states and children of states must implement IState\");
+
+func _execute(delta):
+	if(entity != null):
+		if(entity.current_state != null):
+			entity.current_state._evaluate(delta);
+			entity.current_state._execute(delta);
+		else:
+			printerr(\"_execute(): entity's current state hasn't been initialized\");
+	else:
+		printerr(\"_execute(): entity has not been initialized for state machine\");
+
+func _switch():
+	if(entity != null):
+		if (entity.next_state != null):
+			if(entity.current_state != null):
+				entity.current_state._exit();
+				entity.current_state = entity.next_state;
+				entity.current_state._enter();
+			else:
+				entity.current_state = entity.next_state;
+				entity.current_state._enter();
+		else:
+			printerr(\"_switch(): next state is null\");
+	else:
+		printerr(\"_switch(): entity has not been initialized for state machine\");
+
+func _stop():
+	if (entity != null):
+		if (entity.current_state != null):
+			entity.current_state._exit();
+	else:
+		printerr(\"_stop(): entity has not been initialized ofr state machine\");
+"
+
+[node name="Statemachine" type="Node"]
+
+script = SubResource( 1 )
+
+
