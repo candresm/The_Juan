@@ -1,15 +1,17 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Scripting/StateMachine.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Characters/Juan/Idle.gd" type="Script" id=2]
-[ext_resource path="res://Characters/Juan/Moving.gd" type="Script" id=3]
-[ext_resource path="res://Characters/Juan/Jumping.gd" type="Script" id=4]
-[ext_resource path="res://Characters/Juan/Dead.gd" type="Script" id=5]
-[ext_resource path="res://Characters/Juan/juan_idle.tres" type="Animation" id=6]
-[ext_resource path="res://Characters/Juan/Juan_move.tres" type="Animation" id=7]
+[ext_resource path="res://Characters/Juan/Scripts/Idle.gd" type="Script" id=2]
+[ext_resource path="res://Characters/Juan/Scripts/Moving.gd" type="Script" id=3]
+[ext_resource path="res://Characters/Juan/Scripts/Jumping.gd" type="Script" id=4]
+[ext_resource path="res://Characters/Juan/Scripts/Dead.gd" type="Script" id=5]
+[ext_resource path="res://Characters/Juan/Animations/juan_idle.tres" type="Animation" id=6]
+[ext_resource path="res://Characters/Juan/Animations/Juan_move.tres" type="Animation" id=7]
 [ext_resource path="res://Characters/Juan/Art/Juan.png" type="Texture" id=8]
 [ext_resource path="res://Characters/Juan/Art/juan_gun.png" type="Texture" id=9]
-[ext_resource path="res://Characters/Juan/Gun.gd" type="Script" id=10]
+[ext_resource path="res://Characters/Juan/Scripts/Gun.gd" type="Script" id=10]
+[ext_resource path="res://Characters/Juan/Helpers.gd" type="Script" id=11]
+[ext_resource path="res://Characters/Juan/Art/helper_red_cross.png" type="Texture" id=12]
 
 [sub_resource type="GDScript" id=1]
 
@@ -30,9 +32,13 @@ var next_state;
 var current_state; 
 var direction = Vector2();
 
+var grid_manager; 
+
 func _ready():
 	state_machine.init(self);
-	next_state = idle_state; 
+	next_state = idle_state;
+	if (grid_manager == null): 
+		grid_manager = get_node(\"../../Grids\");  
 
 
 func _process(delta):
@@ -65,14 +71,13 @@ radius = 24.0
 
 [node name="Juan" type="KinematicBody2D" index="0"]
 
-position = Vector2( 424.642, 158.684 )
 z_index = 1
 input_pickable = false
 collision_layer = 1
 collision_mask = 1
 collision/safe_margin = 0.08
 script = SubResource( 1 )
-_sections_unfolded = [ "Z Index" ]
+_sections_unfolded = [ "Transform", "Z Index" ]
 __meta__ = {
 "_edit_group_": true
 }
@@ -128,5 +133,59 @@ texture = ExtResource( 9 )
 offset = Vector2( 12, 0 )
 script = ExtResource( 10 )
 _sections_unfolded = [ "Offset", "Transform", "Z Index" ]
+
+[node name="Helpers" type="Position2D" parent="." index="6"]
+
+editor/display_folded = true
+script = ExtResource( 11 )
+_sections_unfolded = [ "Transform", "Visibility" ]
+
+[node name="Left" type="Sprite" parent="Helpers" index="0"]
+
+texture = ExtResource( 12 )
+offset = Vector2( -48, 0 )
+_sections_unfolded = [ "Offset", "Visibility" ]
+
+[node name="Right" type="Sprite" parent="Helpers" index="1"]
+
+texture = ExtResource( 12 )
+offset = Vector2( 48, 0 )
+_sections_unfolded = [ "Offset" ]
+
+[node name="Up" type="Sprite" parent="Helpers" index="2"]
+
+texture = ExtResource( 12 )
+offset = Vector2( 0, -48 )
+_sections_unfolded = [ "Offset" ]
+
+[node name="Down" type="Sprite" parent="Helpers" index="3"]
+
+texture = ExtResource( 12 )
+offset = Vector2( 0, 48 )
+_sections_unfolded = [ "Offset" ]
+
+[node name="TopLeft" type="Sprite" parent="Helpers" index="4"]
+
+texture = ExtResource( 12 )
+offset = Vector2( -48, -48 )
+_sections_unfolded = [ "Offset" ]
+
+[node name="TopRight" type="Sprite" parent="Helpers" index="5"]
+
+texture = ExtResource( 12 )
+offset = Vector2( 48, -48 )
+_sections_unfolded = [ "Offset" ]
+
+[node name="BottomLeft" type="Sprite" parent="Helpers" index="6"]
+
+texture = ExtResource( 12 )
+offset = Vector2( -48, 48 )
+_sections_unfolded = [ "Offset" ]
+
+[node name="BottomRight" type="Sprite" parent="Helpers" index="7"]
+
+texture = ExtResource( 12 )
+offset = Vector2( 48, 48 )
+_sections_unfolded = [ "Offset" ]
 
 
