@@ -26,9 +26,20 @@ func _ready():
 func _grid_align(global_position):
 	return (midground.world_to_map(global_position) * CELL_SIZE) + (Vector2(1,1) * CELL_SIZE/2);
 
+#characters arent placed using the tile map, so must check if position is taken converting global position to grid position
+func _availableForCharacters(global_position):
+	var characters = get_node("../Characters").get_children();
+	for character in characters: 
+		if (character.name == "Juan"):
+			continue;
+		if (midground.world_to_map(global_position) == midground.world_to_map(character.position)):
+			return false; 
+	return true;  
+
 func _availableG(global_position):
 	return true if (midground.get_cellv(midground.world_to_map(global_position)) == -1) else false; 
 
+#L stands for local
 func _availableL(grid_position):
 	return true if (midground.get_cellv(grid_position) == -1) else false;
 
