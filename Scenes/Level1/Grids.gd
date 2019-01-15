@@ -27,6 +27,7 @@ func _grid_align(global_position):
 	return (midground.world_to_map(global_position) * CELL_SIZE) + (Vector2(1,1) * CELL_SIZE/2);
 
 #characters arent placed using the tile map, so must check if position is taken converting global position to grid position
+#function checks if other characters are standing in the same tile
 func _availableForCharacters(global_position):
 	var characters = get_node("../Characters").get_children();
 	for character in characters: 

@@ -7,6 +7,5 @@ func _update_availability(grid_manager):
 	else:
 		var children = get_children();
 		var parent = get_parent();
-		print(parent.position + children[0].offset);
 		for child in children: 
 			child.visible = true if (grid_manager._availableG(parent.position + child.offset)) else false;
